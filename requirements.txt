@@ -1,20 +1,12 @@
-# 自动化评测引擎核心依赖
-openai>=1.30.0            # OpenAI 兼容 API（可指向 Qwen / GLM 等 OpenAI 兼容端点）
-requests>=2.31.0
-httpx>=0.27.0
-tenacity>=8.2.0           # 断点重试
-pyyaml>=6.0
-python-dotenv>=1.0.0
+# 自动化评测引擎核心依赖（第一步）
+requests>=2.31.0          # OpenAI 兼容端点 REST 调用（不绑定厂商 SDK）
+pyyaml>=6.0               # 配置文件解析
+python-dotenv>=1.0.0      # 从 .env 读取 API Key
 
-# 数据处理
-pandas>=2.0.0
+# 以下为后续步骤所需，可随进度安装
+pandas>=2.0.0             # 第三步：Judge 一致性分析
 numpy>=1.26.0
-scikit-learn>=1.4.0       # Cohen's Kappa 一致性计算
-regex>=2024.0.0
-
-# 可视化（雷达图 / 成本-性能折线图）
-matplotlib>=3.8.0
+scikit-learn>=1.4.0       # Cohen's Kappa 一致性系数
+matplotlib>=3.8.0         # 第四步：能力雷达图 / 成本-性能折线图
 plotly>=5.20.0
-
-# 导出
-openpyxl>=3.1.0
+openpyxl>=3.1.0           # 结果导出 Excel

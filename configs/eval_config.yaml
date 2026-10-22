@@ -1,0 +1,37 @@
+# 评测方案配置：跑什么数据、用哪个模型、输出如何约束
+
+run:
+  output_dir: results        # 产物根目录（jsonl/csv/summary 都在这里）
+  run_id: null               # null = 自动生成时间戳；指定后可做同一批实验的多次对照
+  resume: true               # 断点续跑：已成功的 case 自动跳过
+  concurrency: 8             # 并发数，遇到 429 就调小
+  limit: null                # 只跑前 N 条，用于快速冒烟
+  mock: false                # true = 离线模拟，不消耗 token
+
+prompt:
+  system: |
+    你是一个严谨的问答助手。只能依据给定的参考资料回答问题。
+    若资料中没有答案，必须明确回答"资料中未提及"，禁止编造。
+  template: |
+    参考资料：
+    {context}
+
+    问题：{question}
+  response_hint: |
+    请严格按以下 JSON 格式输出，不要包含任何多余文字：
+    {"answer": "你的回答", "citations": ["引用的资料片段"], "confidence": 0.0}
+
+output:
+  format: json
+  required_keys: [answer]              # 缺字段即判解析失败
+  key_types:                            # 字段类型校验
+    answer: str
+    citations: list
+    confidence: number
+  score_range: null                     # Judge 打分阶段改为 [1, 5]
+  strict: false                         # true = 不接受正则兜底，只认严格 JSON
+
+datasets:
+  - path: datasets/demo_rag_qa.jsonl
+    category: rag_qa
+    # limit: 20

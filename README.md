@@ -26,25 +26,47 @@
    - 自动生成能力雷达图与"成本-性能（Token 消耗 vs 准确率）"折线图
    - RAG 场景结构化分析报告
 
+## 进度
+
+| 模块 | 状态 |
+|---|---|
+| 1. 自动化评测引擎（Python & API） | ✅ 已完成（自检 21/21 通过） |
+| 2. 多维度测试集构建 | ⏳ 待开始 |
+| 3. Judge 偏差校准与一致性评估 | ⏳ 待开始 |
+| 4. 竞品横向对比与能力雷达 | ⏳ 待开始 |
+
+设计说明见 `docs/01-自动化评测引擎设计.md`。
+
 ## 目录结构
 
 ```
 rag-judge-eval-framework/
-├── src/          # 核心源码（引擎、Judge、解析、可视化）
-├── configs/      # API 配置与评测方案配置
-├── datasets/     # 测试集（基础问答 / 大海捞针 / 冲突陷阱 / 注入攻击）
-├── results/      # 评测结果与生成的图表报告
-├── scripts/      # 运行入口脚本
-└── docs/         # 设计文档与分析报告
+├── src/
+│   ├── core/         # 评测引擎：client / config / parser / runner / schema / logger
+│   └── datasets/     # 测试集加载（第二步在此扩展生成器）
+├── configs/          # models.yaml（端点与定价）+ eval_config.yaml（评测方案）
+├── datasets/         # 测试集：demo_rag_qa.jsonl
+├── results/          # 产物：raw/*.jsonl、summary_*.json、results_*.csv
+├── scripts/          # run_eval.py 主入口
+├── tests/            # test_engine.py 引擎自检（无需 API Key）
+└── docs/             # 设计与分析文档
 ```
 
 ## 快速开始
 
 ```bash
 pip install -r requirements.txt
-# 在 configs/ 下配置 API Key 后
-python scripts/run_eval.py --config configs/eval_config.yaml
+cp .env.example .env          # 填入 API Key（.env 已被 gitignore 排除）
+
+python tests/test_engine.py              # 引擎自检，21 项，无需 API Key
+python scripts/run_eval.py --mock        # 离线冒烟，不消耗 token
+python scripts/run_eval.py --model qwen-max --limit 20   # 真实跑测
+python scripts/run_eval.py --model qwen-max glm-4        # 多模型对比
 ```
+
+## License
+
+MIT
 
 ## License
 

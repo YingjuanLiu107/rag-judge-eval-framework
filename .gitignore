@@ -12,8 +12,9 @@ env/
 configs/*secret*
 configs/api_keys.*
 
-# 运行产物
-results/raw/
+# 运行产物（保留目录结构，忽略具体跑测结果）
+results/*
+!results/.gitkeep
 *.log
 .pytest_cache/
 .mypy_cache/

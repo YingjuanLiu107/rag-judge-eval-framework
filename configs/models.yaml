@@ -1,0 +1,53 @@
+# 模型端点与定价配置
+# 安全约定：API Key 只写在 .env / 环境变量里，这里只写环境变量名（api_key_env）
+# 定价说明：下面的 pricing 为「示例值」，正式评测前请以各厂商官网最新公示价为准（标注：需核实）
+
+defaults:
+  temperature: 0.0        # 评测场景默认贪心解码，保证可复现
+  max_tokens: 1024
+  timeout: 60
+  max_retries: 3
+  concurrency: 8
+
+models:
+  - name: gpt-4o-mini
+    model_id: gpt-4o-mini
+    provider: openai
+    base_url: https://api.openai.com/v1
+    api_key_env: OPENAI_API_KEY
+    pricing:
+      prompt_per_1k: 0.0011      # USD，需按官方最新定价核实
+      completion_per_1k: 0.0044
+      currency: USD
+
+  - name: qwen-max
+    model_id: qwen-max
+    provider: dashscope
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    api_key_env: QWEN_API_KEY
+    pricing:
+      prompt_per_1k: 0.02        # CNY，需按官方最新定价核实
+      completion_per_1k: 0.06
+      currency: CNY
+
+  - name: glm-4
+    model_id: glm-4
+    provider: zhipu
+    base_url: https://open.bigmodel.cn/api/paas/v4
+    api_key_env: GLM_API_KEY
+    pricing:
+      prompt_per_1k: 0.05        # CNY，需按官方最新定价核实
+      completion_per_1k: 0.05
+      currency: CNY
+
+# Judge 模型（第三步偏差校准使用）：建议用最强模型，且与被测模型不同源以降低同源偏好
+judge:
+  name: qwen-max-judge
+  model_id: qwen-max
+  provider: dashscope
+  base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+  api_key_env: JUDGE_API_KEY
+  pricing:
+    prompt_per_1k: 0.02
+    completion_per_1k: 0.06
+    currency: CNY
