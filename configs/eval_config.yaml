@@ -32,6 +32,11 @@ output:
   strict: false                         # true = 不接受正则兜底，只认严格 JSON
 
 datasets:
-  - path: datasets/demo_rag_qa.jsonl
+  - path: datasets/rag_qa.jsonl
     category: rag_qa
-    # limit: 20
+  - path: datasets/needle.jsonl
+    category: needle
+  - path: datasets/conflict.jsonl
+    category: conflict
+  - path: datasets/injection.jsonl
+    category: injection

@@ -40,14 +40,26 @@ models:
       completion_per_1k: 0.05
       currency: CNY
 
-# Judge 模型（第三步偏差校准使用）：建议用最强模型，且与被测模型不同源以降低同源偏好
-judge:
-  name: qwen-max-judge
-  model_id: qwen-max
-  provider: dashscope
-  base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
-  api_key_env: JUDGE_API_KEY
-  pricing:
-    prompt_per_1k: 0.02
-    completion_per_1k: 0.06
-    currency: CNY
+# Judge 裁判模型（第三步偏差校准）：建议用最强模型，且尽量与被测模型不同源以降低同源偏好。
+# 这里配两个裁判，用于计算裁判之间的 Cohen's Kappa（一致性校准到 0.85 以上）。
+# 注意：本轮两个裁判都来自同一厂商（同源），结论中会标注该局限。
+judges:
+  - name: qwen-max-judge
+    model_id: qwen-max
+    provider: dashscope
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    api_key_env: JUDGE_API_KEY
+    pricing:
+      prompt_per_1k: 0.02
+      completion_per_1k: 0.06
+      currency: CNY
+
+  - name: qwen-plus-judge
+    model_id: qwen-plus
+    provider: dashscope
+    base_url: https://dashscope.aliyuncs.com/compatible-mode/v1
+    api_key_env: JUDGE_API_KEY
+    pricing:
+      prompt_per_1k: 0.004
+      completion_per_1k: 0.012
+      currency: CNY
