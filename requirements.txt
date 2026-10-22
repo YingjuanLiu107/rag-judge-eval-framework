@@ -1,0 +1,20 @@
+# 自动化评测引擎核心依赖
+openai>=1.30.0            # OpenAI 兼容 API（可指向 Qwen / GLM 等 OpenAI 兼容端点）
+requests>=2.31.0
+httpx>=0.27.0
+tenacity>=8.2.0           # 断点重试
+pyyaml>=6.0
+python-dotenv>=1.0.0
+
+# 数据处理
+pandas>=2.0.0
+numpy>=1.26.0
+scikit-learn>=1.4.0       # Cohen's Kappa 一致性计算
+regex>=2024.0.0
+
+# 可视化（雷达图 / 成本-性能折线图）
+matplotlib>=3.8.0
+plotly>=5.20.0
+
+# 导出
+openpyxl>=3.1.0

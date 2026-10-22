@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# 环境变量与密钥（切勿提交 API Key）
+.env
+.env.*
+configs/*secret*
+configs/api_keys.*
+
+# 运行产物
+results/raw/
+*.log
+.pytest_cache/
+.mypy_cache/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
