@@ -24,7 +24,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from src.core.client import LLMClient  # noqa: E402
-from src.core.config import EvalConfig  # noqa: E402
+from src.core.config import EvalConfig, load_dotenv  # noqa: E402
 from src.core.logger import get_logger  # noqa: E402
 from src.core.runner import EvalRunner  # noqa: E402
 from src.datasets import load_from_config  # noqa: E402
@@ -54,7 +54,9 @@ def main(argv=None) -> int:
     if args.verbose:
         log.level = 10
 
-    cfg = EvalConfig.load(args.models_config, args.eval_config)
+    # 优先加载项目根目录 .env 中的 API Key（.env 不进仓库）
+    load_dotenv(ROOT / ".env")
+    cfg = EvalConfig.load(args.models_config, args.eval_config, env_path=ROOT / ".env")
     if args.concurrency:
         cfg.run.concurrency = args.concurrency
     if args.limit:

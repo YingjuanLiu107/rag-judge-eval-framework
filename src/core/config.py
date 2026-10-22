@@ -26,6 +26,35 @@ class ConfigError(Exception):
     pass
 
 
+def load_dotenv(path: str | Path = ".env", override: bool = False) -> bool:
+    """把 .env 里的键值对注入 os.environ（不覆盖已有环境变量，除非 override=True）。
+
+    优先使用 python-dotenv；未安装时用内置解析兜底，保证零额外依赖也能跑。
+    """
+    p = Path(path)
+    if not p.is_file():
+        return False
+    try:
+        from dotenv import load_dotenv as _ld  # type: ignore
+        _ld(str(p), override=override)
+        return True
+    except ImportError:
+        pass
+    except Exception:
+        pass
+
+    with open(p, "r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            k, v = line.split("=", 1)
+            k, v = k.strip(), v.strip().strip('"').strip("'")
+            if k and (override or k not in os.environ):
+                os.environ[k] = v
+    return True
+
+
 def _expand_env(node: Any) -> Any:
     """递归替换 ${VAR} / ${VAR:default}。"""
     if isinstance(node, str):
@@ -134,7 +163,8 @@ class EvalConfig:
     raw: Dict[str, Any] = field(default_factory=dict)
 
     @staticmethod
-    def load(models_path: str | Path, eval_path: str | Path) -> "EvalConfig":
+    def load(models_path: str | Path, eval_path: str | Path, env_path: str | Path = ".env") -> "EvalConfig":
+        load_dotenv(env_path)
         mcfg = load_yaml(models_path)
         ecfg = load_yaml(eval_path)
         defaults = mcfg.get("defaults", {}) or {}
